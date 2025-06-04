@@ -1,0 +1,1 @@
+g++ -std=c++11 -W -Werror -pedantic -DDEBUG main.cpp tile.cpp -lraylib
