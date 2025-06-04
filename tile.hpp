@@ -17,11 +17,18 @@ typedef struct Vec2i {
 typedef struct Tile {
     Vec2i pos;
     Color color;
+    Vector2 points[6];
 
     Tile();
     Tile(Vec2i pos);
+
     void Draw();
+    void DrawSelection();
     void DebugDraw();
+
+    Vector2 GetWorldPosition();
+    Vector2* GetWorldVertices(); // always 6 points :D
+    bool ContainsPoint(Vector2 point);
 } Tile;
 
 #endif
