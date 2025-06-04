@@ -19,6 +19,8 @@ Tile::Tile(Vec2i pos) {
     }
 }
 
+// Tile::~Tile() {}
+
 void Tile::Draw() {
     Vector2 position = this->GetWorldPosition();
     
@@ -29,12 +31,7 @@ void Tile::Draw() {
 void Tile::DrawSelection() {
     Vector2 position = this->GetWorldPosition();
 
-    DrawPolyLinesEx(position, 6, TILE_RADIUS, 0, 8, WHITE);
-#ifdef DEBUG
-    for (int i = 0; i < 6; i++) {
-        DrawCircleV(this->points[i], 8, WHITE);
-    }
-#endif
+    DrawPolyLinesEx(position, 6, TILE_RADIUS+16, 0, 16, ColorBrightness(this->color, 0.75f));
 }
 
 void Tile::DebugDraw() {
@@ -65,6 +62,5 @@ Vector2* Tile::GetWorldVertices() {
 }
 
 bool Tile::ContainsPoint(Vector2 point) {
-    Vector2 position = this->GetWorldPosition();
     return CheckCollisionPointPoly(point, this->points, 6);
 }

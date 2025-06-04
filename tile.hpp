@@ -21,6 +21,7 @@ typedef struct Tile {
 
     Tile();
     Tile(Vec2i pos);
+    // ~Tile();
 
     void Draw();
     void DrawSelection();
@@ -30,5 +31,15 @@ typedef struct Tile {
     Vector2* GetWorldVertices(); // always 6 points :D
     bool ContainsPoint(Vector2 point);
 } Tile;
+
+// typedef struct TileGrid {
+//     int width, height;
+//     int x, y;
+//     Tile* tiles;
+
+//     TileGrid();
+//     TileGrid(int width, int height);
+//     ~TileGrid();
+// } TileGrid;
 
 #endif

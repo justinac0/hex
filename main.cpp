@@ -47,25 +47,31 @@ void UpdateCamera(Camera2D *camera) {
     }
 }
 
+
 int main() {
     srand(time(NULL));
-
+    
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "hex");
-
+    
     // setup camera
     Camera2D camera = {};
     camera.zoom = 1.0f;
-
+    
     // setup grid
-    Tile grid[10000];
-    int i = 0;
-    for (int y = 0; y < 100; y++) {
-        for (int x = 0; x < 100; x++) {
+    #define GRID_SIZE 50
+    Tile grid[GRID_SIZE * GRID_SIZE];
+    size_t i = 0;
+    for (int y = 0; y < GRID_SIZE; y++) {
+        for (int x = 0; x < GRID_SIZE; x++) {
             grid[i++] = Tile({x, y});
         }
     }
-   
+    #undef GRID_SIZE
+    
+    // Tile Selection    
+    Tile *current = NULL;
+
     // draw, update
     while (!WindowShouldClose()) {
         UpdateCamera(&camera);
@@ -76,29 +82,35 @@ int main() {
 
         Vector2 mp = GetMousePosition();
         Vector2 world = GetScreenToWorld2D(mp, camera);
+
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            for (auto &t : grid) {
+                if (t.ContainsPoint(world)) {
+                    current = &t;
+                    goto CRIMES;
+                }
+            }
+
+            current = NULL;
+        }
+        CRIMES: // yeah I did that - mitch
         
         for (auto &t : grid) {
             t.Draw();
-        }
-        
         #ifdef DEBUG
-        for (auto t : grid) {
             t.DebugDraw();
-        }
         #endif
+        }
+
+        if (current) {
+            current->DrawSelection();
+        }
 
         if (IsKeyPressed(KEY_R)) {
             camera = {};
             camera.zoom = 1.0f;
         }
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || true) {
-            for (auto &t : grid) {
-                if (t.ContainsPoint(world)) {
-                    t.DrawSelection();
-                }
-            }
-        }
         EndMode2D();
         EndDrawing();
     }
