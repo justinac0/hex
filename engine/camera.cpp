@@ -9,7 +9,7 @@ void UpdateCamera(Camera2D *camera) {
 
     Vector2 mp = GetMousePosition();
     Vector2 world = GetScreenToWorld2D(mp, *camera);
-    DrawCircleV(world, 10.0f, MAGENTA);
+    DrawCircleV(world, 20.0f, MAGENTA);
 
     if (IsKeyPressed(KEY_R)) {
         *camera = {};
@@ -31,6 +31,6 @@ void UpdateCamera(Camera2D *camera) {
         
         camera->target = mouseWorldPos;
         float scale = 0.2f*wheel;
-        camera->zoom = Clamp(expf(logf(camera->zoom) + scale), 0.125f, 64.0f);
+        camera->zoom = Clamp(expf(logf(camera->zoom) + scale), 0.1f, 1.0f);
     }
 }

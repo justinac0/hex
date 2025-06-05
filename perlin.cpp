@@ -65,7 +65,7 @@ int main() {
     Camera2D camera = {};
     camera.zoom = 1.0f;
 
-    PerlinNoise perlinNoise(SCREEN_WIDTH, SCREEN_HEIGHT, 5.0f);
+    PerlinNoise perlinNoise(512, 512, 5.0f);
     Texture2D texture = LoadTextureFromImage(perlinNoise.image);
     // Image noise = GenImagePerlinNoise(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 5.0f);
     // Texture2D texture = LoadTextureFromImage(noise);

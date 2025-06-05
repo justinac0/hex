@@ -31,7 +31,7 @@ void Tile::Draw() {
 void Tile::DrawSelection() {
     Vector2 position = this->GetWorldPosition();
 
-    DrawPolyLinesEx(position, 6, TILE_RADIUS+16, 0, 16, ColorBrightness(this->color, 0.75f));
+    DrawPolyLinesEx(position, 6, TILE_RADIUS+16, 0, 16, MAGENTA);
 }
 
 void Tile::DebugDraw() {
@@ -42,7 +42,7 @@ void Tile::DebugDraw() {
     int nbytes = sprintf(buff, "%d, %d", pos.x, pos.y);
     if (nbytes > 0) buff[nbytes + 1] = '\0';
 
-    DrawTextBoxCentered(buff, position.x, position.y, WHITE, 48);
+    DrawTextBoxCentered(buff, position.x, position.y, WHITE, 24);
 }
 
 Vector2 Tile::GetWorldPosition() {
