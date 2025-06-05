@@ -1,0 +1,27 @@
+#include "camera.hpp"
+
+#include <math.h>
+#include <assert.h>
+#include "util.hpp"
+
+void UpdateCamera(Camera2D *camera) {
+    assert(camera);
+
+    // move
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        Vector2 delta = GetMouseDelta();
+        delta = Vector2Scale(delta, -1.0f/camera->zoom);
+        camera->target = Vector2Add(camera->target, delta);
+    }
+
+    // scroll
+    float wheel = GetMouseWheelMove();
+    if (wheel != 0) {
+        Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), *camera);
+        camera->offset = GetMousePosition();
+        
+        camera->target = mouseWorldPos;
+        float scale = 0.2f*wheel;
+        camera->zoom = Clamp(expf(logf(camera->zoom) + scale), 0.125f, 64.0f);
+    }
+}

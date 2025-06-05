@@ -2,33 +2,10 @@
 #include <queue>
 #include <assert.h>
 
-#include "util.hpp"
-#include "tile.hpp"
-
-#define SCREEN_WIDTH (1280)
-#define SCREEN_HEIGHT (720)
-
-void UpdateCamera(Camera2D *camera) {
-    assert(camera);
-
-    // move
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        Vector2 delta = GetMouseDelta();
-        delta = Vector2Scale(delta, -1.0f/camera->zoom);
-        camera->target = Vector2Add(camera->target, delta);
-    }
-
-    // scroll
-    float wheel = GetMouseWheelMove();
-    if (wheel != 0) {
-        Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), *camera);
-        camera->offset = GetMousePosition();
-        
-        camera->target = mouseWorldPos;
-        float scale = 0.2f*wheel;
-        camera->zoom = Clamp(expf(logf(camera->zoom) + scale), 0.125f, 64.0f);
-    }
-}
+#include "engine/util.hpp"
+#include "engine/tile.hpp"
+#include "engine/window.hpp"
+#include "engine/camera.hpp"
 
 int main() {
     srand(time(NULL));
@@ -39,7 +16,7 @@ int main() {
     // setup camera
     Camera2D camera = {};
     camera.zoom = 1.0f;
-    
+
     // setup grid
     #define GRID_SIZE 50
     Tile grid[GRID_SIZE * GRID_SIZE];
@@ -85,7 +62,6 @@ int main() {
                 current = NULL;    
             }
         }
-
         CRIMES: // yeah I did that - mitch
 
         for (auto &t : grid) {

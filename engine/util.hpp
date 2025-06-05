@@ -2,6 +2,7 @@
 #define UTIL_HPP
 
 #include <raylib.h>
+#include <raymath.h>
 
 static Color colors[] = {
     LIGHTGRAY,
@@ -52,25 +53,6 @@ static void DrawTextBoxCentered(const char *text, int x, int y, Color color, int
     int boxY = y - boxHeight / 2;
     DrawRectangle(boxX, boxY, boxWidth, boxHeight, Fade(BLACK, 0.5f));
     DrawText(text, boxX + TEXTBOX_PADDING, boxY + TEXTBOX_PADDING, fontSize, color);
-}
-
-static Vector2 Vector2Scale(Vector2 a, float scalar) {
-    return {
-        a.x * scalar,
-        a.y * scalar,
-    };
-}
-
-static Vector2 Vector2Add(Vector2 a, Vector2 b) {
-    return {
-        a.x + b.x,
-        a.y + b.y,
-    };
-}
-
-static float Clamp(float value, float min, float max) {
-    const float t = value < min ? min : value;
-    return t > max ? max : t;
 }
 
 #endif
