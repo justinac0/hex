@@ -1,29 +1,12 @@
 #include <iostream>
+#include <queue>
 #include <assert.h>
+
 #include "util.hpp"
 #include "tile.hpp"
 
 #define SCREEN_WIDTH (1280)
 #define SCREEN_HEIGHT (720)
-
-Vector2 Vector2Scale(Vector2 a, float scalar) {
-    return {
-        a.x * scalar,
-        a.y * scalar,
-    };
-}
-
-Vector2 Vector2Add(Vector2 a, Vector2 b) {
-    return {
-        a.x + b.x,
-        a.y + b.y,
-    };
-}
-
-float Clamp(float value, float min, float max) {
-    const float t = value < min ? min : value;
-    return t > max ? max : t;
-}
 
 void UpdateCamera(Camera2D *camera) {
     assert(camera);
@@ -47,13 +30,12 @@ void UpdateCamera(Camera2D *camera) {
     }
 }
 
-
 int main() {
     srand(time(NULL));
     
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "hex");
-    
+
     // setup camera
     Camera2D camera = {};
     camera.zoom = 1.0f;
@@ -68,9 +50,11 @@ int main() {
         }
     }
     #undef GRID_SIZE
-    
+
     // Tile Selection    
     Tile *current = NULL;
+
+    double startClick = 0;
 
     // draw, update
     while (!WindowShouldClose()) {
@@ -84,17 +68,26 @@ int main() {
         Vector2 world = GetScreenToWorld2D(mp, camera);
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            for (auto &t : grid) {
-                if (t.ContainsPoint(world)) {
-                    current = &t;
-                    goto CRIMES;
-                }
-            }
-
-            current = NULL;
+            startClick = GetTime();
         }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            double now = GetTime();
+            double clickTime = now - startClick;
+            if (clickTime < 0.25) {
+                for (auto &t : grid) {
+                    if (t.ContainsPoint(world)) {
+                        current = &t;
+                        goto CRIMES;
+                    }
+                }
+
+                current = NULL;    
+            }
+        }
+
         CRIMES: // yeah I did that - mitch
-        
+
         for (auto &t : grid) {
             t.Draw();
         #ifdef DEBUG
