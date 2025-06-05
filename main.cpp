@@ -75,11 +75,6 @@ int main() {
             current->DrawSelection();
         }
 
-        if (IsKeyPressed(KEY_R)) {
-            camera = {};
-            camera.zoom = 1.0f;
-        }
-
         EndMode2D();
         EndDrawing();
     }

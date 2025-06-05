@@ -7,6 +7,11 @@
 void UpdateCamera(Camera2D *camera) {
     assert(camera);
 
+    if (IsKeyPressed(KEY_R)) {
+        *camera = {};
+        camera->zoom = 1.0f;
+    }
+
     // move
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 delta = GetMouseDelta();
