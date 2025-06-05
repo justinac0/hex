@@ -7,6 +7,10 @@
 void UpdateCamera(Camera2D *camera) {
     assert(camera);
 
+    Vector2 mp = GetMousePosition();
+    Vector2 world = GetScreenToWorld2D(mp, *camera);
+    DrawCircleV(world, 10.0f, MAGENTA);
+
     if (IsKeyPressed(KEY_R)) {
         *camera = {};
         camera->zoom = 1.0f;
