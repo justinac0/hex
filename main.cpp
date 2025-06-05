@@ -13,9 +13,6 @@ Color* GetPixelFromImage(Image* image, int x, int y) {
     return (Color*)(image->data) + y * image->width + x;
 }
 
-#define BITS(n_bits) ((1 << (n_bits)) - 1)
-#define MSB_MASK(n_bits, offset, container_size) (BITS(n_bits) << ((container_size) - (n_bits) - (offset)))
-
 Color TileColorFromSample(Color* sample) {
     unsigned char random_sample = sample->r;
     
