@@ -31,7 +31,8 @@ void Tile::Draw() {
 void Tile::DrawSelection() {
     Vector2 position = this->GetWorldPosition();
 
-    DrawPolyLinesEx(position, 6, TILE_RADIUS+16, 0, 16, MAGENTA);
+    int thickness = TILE_RADIUS/6;
+    DrawPolyLinesEx(position, 6, TILE_RADIUS+thickness, 0, thickness, MAGENTA);
 }
 
 void Tile::DebugDraw() {

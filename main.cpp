@@ -27,7 +27,7 @@ int main() {
 
     while (!window.ShouldClose()) {
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground({ 45, 45, 45, 255 });
         BeginMode2D(camera);
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
