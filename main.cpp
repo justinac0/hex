@@ -3,118 +3,61 @@
 #include <assert.h>
 
 #include "engine/util.hpp"
-#include "engine/tile.hpp"
 #include "engine/window.hpp"
 #include "engine/camera.hpp"
-
-Color* GetPixelFromImage(Image* image, int x, int y) {
-    assert(x >= 0 && x < image->width);
-    assert(y >= 0 && y < image->height);
-    return (Color*)(image->data) + y * image->width + x;
-}
-
-Color TileColorFromSample(Color* sample) {
-    unsigned char random_sample = sample->r;
-    
-    if (random_sample > 191) {
-        return WHITE;
-    } else if (random_sample > 127) {
-        return GREEN;
-    } else if (random_sample > 63) {
-        return BLUE;
-    } else {
-        return DARKBLUE;
-    }
-}
+#include "engine/tile.hpp"
+#include "engine/tilemap.hpp"
 
 int main() {
-    srand(time(NULL));
-
-    #ifdef DEBUG
+#ifdef DEBUG
     SetTraceLogLevel(LOG_DEBUG);
-    #else
+#else
     SetTraceLogLevel(LOG_ERROR);
-    #endif
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "hex");
+#endif
 
-    // setup camera
-    Camera2D camera = {};
-    camera.zoom = 1.0f;
+    Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "hex");
 
-    // setup grid
-    #define GRID_SIZE (150)
-    Image noise = GenImagePerlinNoise(GRID_SIZE, GRID_SIZE, rand()%100, rand()%100, 5.0f);
-    Tile grid[GRID_SIZE * GRID_SIZE];
-    for (int y = 0; y < GRID_SIZE; y++) {
-        for (int x = 0; x < GRID_SIZE; x++) {
-            size_t i = (size_t)y * GRID_SIZE + (size_t)x;
-            Color* sample = GetPixelFromImage(&noise, x, y);
-            grid[i] = Tile({x, y});
-            grid[i].color = TileColorFromSample(sample);
-        }
-    }
-    #undef GRID_SIZE
+    Camera2D camera;
+    InitCamera(&camera);
 
-    // Tile Selection    
+    TileMap grid(128, 64);
+    grid.Generate();
+
     Tile *current = NULL;
 
-    double startClick = 0;
-
-    Texture2D texture = LoadTextureFromImage(noise);
-
-    // draw, update
-    while (!WindowShouldClose()) {
+    while (!window.ShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
         BeginMode2D(camera);
 
-        Vector2 mp = GetMousePosition();
-        Vector2 world = GetScreenToWorld2D(mp, camera);
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            Vector2 mp = GetMousePosition();
+            Vector2 world = GetScreenToWorld2D(mp, camera);
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            startClick = GetTime();
-
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-            double now = GetTime();
-            double clickTime = now - startClick;
-            if (clickTime < 0.25) {
-                for (auto &t : grid) {
-                    if (t.ContainsPoint(world)) {
-                        current = &t;
-                        goto CRIMES;
-                    }
-                }
-
-                current = NULL;    
-            }
+            current = grid.GetTile(world.x, world.y);
         }
-        CRIMES: // yeah I did that - mitch
 
-        for (auto &t : grid)
-            t.Draw();
-
-        #ifdef DEBUG
-        for (auto &t : grid)
-            t.DebugDraw();
-        #endif
+        grid.Draw();
 
         if (current)
             current->DrawSelection();
 
-        UpdateCamera(&camera);
-
         EndMode2D();
 
-        #ifdef DEBUG
-        DrawTexture(texture, 0, 0, WHITE);
-        #endif
+        UpdateCamera(&camera);
+
+        // cursor
+        Vector2 mp = GetMousePosition();
+        Rectangle rect;
+        rect.width = 16;
+        rect.height = 16;
+        rect.x = mp.x - rect.width/2;
+        rect.y = mp.y - rect.height/2;
+        DrawRectangle(rect.x, rect.y, rect.width, rect.height, RAYWHITE);
+        DrawRectangleLinesEx(rect, 2, BLACK);
 
         EndDrawing();
     }
 
-    UnloadImage(noise);
-
-    CloseWindow();
     return 0;
 }

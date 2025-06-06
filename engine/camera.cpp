@@ -4,12 +4,18 @@
 #include <assert.h>
 #include "util.hpp"
 
+void InitCamera(Camera2D *camera) {
+    assert(camera);
+
+    *camera = {};
+    camera->zoom = 1.0f;
+}
+
 void UpdateCamera(Camera2D *camera) {
     assert(camera);
 
     Vector2 mp = GetMousePosition();
     Vector2 world = GetScreenToWorld2D(mp, *camera);
-    DrawCircleV(world, 20.0f, MAGENTA);
 
     if (IsKeyPressed(KEY_R)) {
         *camera = {};

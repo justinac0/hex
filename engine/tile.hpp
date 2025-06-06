@@ -32,4 +32,19 @@ typedef struct Tile {
     bool ContainsPoint(Vector2 point);
 } Tile;
 
+// use for sampling noise data
+static Color TileColorFromSample(Color* sample) {
+    unsigned char random_sample = sample->r;
+
+    if (random_sample > 191) {
+        return WHITE;
+    } else if (random_sample > 127) {
+        return GREEN;
+    } else if (random_sample > 63) {
+        return BLUE;
+    } else {
+        return DARKBLUE;
+    }
+}
+
 #endif

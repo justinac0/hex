@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <raymath.h>
+#include <assert.h>
 
 static Color colors[] = {
     LIGHTGRAY,
@@ -53,6 +54,12 @@ static void DrawTextBoxCentered(const char *text, int x, int y, Color color, int
     int boxY = y - boxHeight / 2;
     DrawRectangle(boxX, boxY, boxWidth, boxHeight, Fade(BLACK, 0.5f));
     DrawText(text, boxX + TEXTBOX_PADDING, boxY + TEXTBOX_PADDING, fontSize, color);
+}
+
+static Color* GetPixelFromImage(Image* image, int x, int y) {
+    assert(x >= 0 && x < image->width);
+    assert(y >= 0 && y < image->height);
+    return (Color*)(image->data) + y * image->width + x;
 }
 
 #endif
