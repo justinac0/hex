@@ -2,11 +2,22 @@
 #include <queue>
 #include <assert.h>
 
-#include "engine/util.hpp"
-#include "engine/window.hpp"
-#include "engine/camera.hpp"
-#include "engine/tile.hpp"
-#include "engine/tilemap.hpp"
+#include "src/util.hpp"
+#include "src/window.hpp"
+#include "src/camera.hpp"
+#include "src/tile.hpp"
+#include "src/tilemap.hpp"
+
+void DrawCursor() {
+    Vector2 mp = GetMousePosition();
+    Rectangle rect;
+    rect.width = 16;
+    rect.height = 16;
+    rect.x = mp.x - rect.width/2;
+    rect.y = mp.y - rect.height/2;
+    DrawRectangle(rect.x, rect.y, rect.width, rect.height, RAYWHITE);
+    DrawRectangleLinesEx(rect, 2, BLACK);
+}
 
 int main() {
 #ifdef DEBUG
@@ -20,7 +31,7 @@ int main() {
     Camera2D camera;
     InitCamera(&camera);
 
-    TileMap grid(128, 64);
+    TileMap grid(64, 40);
     grid.Generate();
 
     Tile *current = NULL;
@@ -34,7 +45,7 @@ int main() {
             Vector2 mp = GetMousePosition();
             Vector2 world = GetScreenToWorld2D(mp, camera);
 
-            current = grid.GetTile(world.x, world.y);
+            current = grid.GetTileFromWorldSpace(world.x, world.y);
         }
 
         grid.Draw();
@@ -46,15 +57,7 @@ int main() {
 
         UpdateCamera(&camera);
 
-        // cursor
-        Vector2 mp = GetMousePosition();
-        Rectangle rect;
-        rect.width = 16;
-        rect.height = 16;
-        rect.x = mp.x - rect.width/2;
-        rect.y = mp.y - rect.height/2;
-        DrawRectangle(rect.x, rect.y, rect.width, rect.height, RAYWHITE);
-        DrawRectangleLinesEx(rect, 2, BLACK);
+        DrawCursor();
 
         EndDrawing();
     }
