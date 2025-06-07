@@ -10,6 +10,10 @@ TileMap::TileMap(unsigned short width, unsigned short height) {
     assert(this->tiles);
 }
 
+TileMap::~TileMap() {
+    free(tiles);
+}
+
 void TileMap::Generate() {
     srand(time(NULL));
     Image noise = GenImagePerlinNoise(width, height, rand()%100, rand()%100, 5.0f);
@@ -27,7 +31,7 @@ void TileMap::LoadFromFile(const char *filepath) {
 
 }
 
-Tile *TileMap::GetTile(float wx, float wy) {
+Tile *TileMap::GetTileFromWorldSpace(float wx, float wy) {
     for (int i = 0; i < width * height; i++) {
         if (tiles[i].ContainsPoint({wx, wy})) {
             return &tiles[i];

@@ -1,1 +1,1 @@
-g++ -std=c++14 -W -Werror -g -pedantic "$@" engine/*.cpp main.cpp -lraylib
+g++ -std=c++14 -W -Werror -g -pedantic "$@" src/*.cpp main.cpp -lraylib

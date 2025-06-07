@@ -1,6 +1,7 @@
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
 
+#include <raylib.h>
 #include "tile.hpp"
 
 typedef struct TileMap {
@@ -9,10 +10,11 @@ typedef struct TileMap {
     Tile *tiles;
 
     TileMap(unsigned short width, unsigned short height);
+    ~TileMap();
 
     void Generate();
     void LoadFromFile(const char *filepath);
-    Tile *GetTile(float wx, float wy); // takes world x and y
+    Tile *GetTileFromWorldSpace(float wx, float wy);
     void Draw();
 
     unsigned int Length();
