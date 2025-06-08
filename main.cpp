@@ -59,6 +59,17 @@ int main() {
 
         if (current) {
             current->DrawSelection();
+            current->discovered = true;
+
+            Vec2i n[6];
+            current->GetNeighbors(n);
+            for (int i = 0; i < 6; i++) {
+                Vec2i pos = n[i];
+                const int offset = pos.x + pos.y * grid.width;
+                if (offset < 0 || offset > grid.width * grid.height) continue;
+
+                grid.tiles[offset].discovered = true;
+            }
         }
 
         EndMode2D();

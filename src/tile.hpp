@@ -19,6 +19,8 @@ typedef struct Tile {
     Color color;
     Vector2 points[6];
 
+    bool discovered;
+
     Tile();
     Tile(Vec2i pos);
     // ~Tile();
@@ -28,7 +30,8 @@ typedef struct Tile {
     void DebugDraw();
 
     Vector2 GetWorldPosition();
-    Vector2* GetWorldVertices(); // always 6 points :D
+    Vector2* GetWorldVertices();
+    void GetNeighbors(Vec2i dst[6]);
     bool ContainsPoint(Vector2 point);
 } Tile;
 

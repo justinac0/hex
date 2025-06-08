@@ -19,14 +19,36 @@ Tile::Tile(Vec2i pos) {
     }
 }
 
-// Tile::~Tile() {}
-
 void Tile::Draw() {
     Vector2 position = this->GetWorldPosition();
-    
+
     DrawPoly(position, 6, TILE_RADIUS, 0, this->color);
+
+#ifdef DEBUG
+    if (!discovered) {
+        DrawPoly(position, 6, TILE_RADIUS, 0, Fade({75,75,75,255}, 0.97));
+    }
+#endif
 }
 
+void Tile::GetNeighbors(Vec2i dst[6]) {
+    if ((pos.x % 2) == 0 && pos.x != 0) {
+        dst[0] = {pos.x, pos.y-1};
+        dst[1] = {pos.x, pos.y+1};
+        dst[2] = {pos.x-1, pos.y};
+        dst[3] = {pos.x+1, pos.y};
+        dst[4] = {pos.x-1, pos.y-1};
+        dst[5] = {pos.x+1, pos.y-1};
+        return;
+    }
+
+    dst[0] = {pos.x-1, pos.y};
+    dst[1] = {pos.x+1, pos.y};
+    dst[2] = {pos.x-1, pos.y+1};
+    dst[3] = {pos.x+1, pos.y+1};
+    dst[4] = {pos.x, pos.y-1};
+    dst[5] = {pos.x, pos.y+1};
+}
 
 void Tile::DrawSelection() {
     Vector2 position = this->GetWorldPosition();
