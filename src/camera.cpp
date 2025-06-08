@@ -1,5 +1,6 @@
 #include "camera.hpp"
 
+#include <iostream>
 #include <math.h>
 #include <assert.h>
 #include "util.hpp"
@@ -11,8 +12,9 @@ void InitCamera(Camera2D *camera) {
     camera->zoom = 1.0f;
 }
 
-void UpdateCamera(Camera2D *camera) {
+void UpdateCamera(Camera2D *camera, Vector2 *poffset) {
     assert(camera);
+    assert(poffset);
 
     Vector2 mp = GetMousePosition();
     Vector2 world = GetScreenToWorld2D(mp, *camera);
@@ -27,6 +29,7 @@ void UpdateCamera(Camera2D *camera) {
         Vector2 delta = GetMouseDelta();
         delta = Vector2Scale(delta, -1.0f/camera->zoom);
         camera->target = Vector2Add(camera->target, delta);
+        *poffset = Vector2Add(camera->target, delta);
     }
 
     // scroll

@@ -31,7 +31,9 @@ int main() {
     Camera2D camera;
     InitCamera(&camera);
 
-    TileMap grid(64, 40);
+    Vector2 camera_offset = {};
+
+    TileMap grid(1024, 720);
     grid.Generate();
 
     Tile *current = NULL;
@@ -44,18 +46,18 @@ int main() {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             Vector2 mp = GetMousePosition();
             Vector2 world = GetScreenToWorld2D(mp, camera);
-
             current = grid.GetTileFromWorldSpace(world.x, world.y);
         }
 
-        grid.Draw();
+        grid.DrawCulled(camera, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        if (current)
+        if (current) {
             current->DrawSelection();
+        }
 
         EndMode2D();
 
-        UpdateCamera(&camera);
+        UpdateCamera(&camera, &camera_offset);
 
         DrawCursor();
 

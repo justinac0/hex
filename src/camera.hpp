@@ -4,6 +4,6 @@
 #include <raylib.h>
 
 void InitCamera(Camera2D *camera);
-void UpdateCamera(Camera2D *camera);
+void UpdateCamera(Camera2D *camera, Vector2 *poffset);
 
 #endif

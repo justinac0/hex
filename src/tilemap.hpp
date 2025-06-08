@@ -16,6 +16,9 @@ typedef struct TileMap {
     void LoadFromFile(const char *filepath);
     Tile *GetTileFromWorldSpace(float wx, float wy);
     void Draw();
+    void DrawCulled(Camera2D camera, int screen_width, int screen_height);
+
+    Image perlin;
 
     unsigned int Length();
 } TileMap;

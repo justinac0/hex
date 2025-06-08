@@ -7,7 +7,7 @@
 #include <raylib.h>
 #include <math.h>
 
-#define TILE_RADIUS (256)
+#define TILE_RADIUS (128)
 
 typedef struct Vec2i {
     int x;
@@ -38,6 +38,8 @@ static Color TileColorFromSample(Color* sample) {
 
     if (random_sample > 191) {
         return WHITE;
+    } else if (random_sample > 175) {
+        return GRAY;
     } else if (random_sample > 127) {
         return GREEN;
     } else if (random_sample > 63) {

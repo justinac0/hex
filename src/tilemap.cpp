@@ -11,16 +11,17 @@ TileMap::TileMap(unsigned short width, unsigned short height) {
 }
 
 TileMap::~TileMap() {
+    UnloadImage(perlin);
     free(tiles);
 }
 
 void TileMap::Generate() {
     srand(time(NULL));
-    Image noise = GenImagePerlinNoise(width, height, rand()%100, rand()%100, 5.0f);
+    perlin = GenImagePerlinNoise(width, height, rand()%100, rand()%100, width/24.0f);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             size_t i = (size_t)y * width + (size_t)x;
-            Color* sample = GetPixelFromImage(&noise, x, y);
+            Color* sample = GetPixelFromImage(&perlin, x, y);
             this->tiles[i] = Tile({x, y});
             this->tiles[i].color = TileColorFromSample(sample);
         }
@@ -51,6 +52,39 @@ void TileMap::Draw() {
         tiles[i].DebugDraw();
     }
 #endif
+}
+
+void TileMap::DrawCulled(Camera2D camera, int screen_width, int screen_height) {
+    // abitary size for renderable region
+    float width = 2*TILE_RADIUS+2*TILE_RADIUS*cosf(PI/3);
+    float height = 4*TILE_RADIUS*sinf(PI/3);
+
+    // define screen bounds
+    Vector2 tl = {0, 0};
+    tl = GetScreenToWorld2D(tl, camera);
+
+    Vector2 br = {(float)screen_width, (float)screen_height};
+    br = GetScreenToWorld2D(br, camera);
+
+    // screen bounds to indexes
+    const int x_start = (int)2*(tl.x + 2*TILE_RADIUS*cosf(PI/3))/width;
+    const int y_start = (int)2*(tl.y + 2*TILE_RADIUS*sinf(PI/3))/height;
+
+    const int x_end = (int)2*(br.x + 2*TILE_RADIUS*cosf(PI/3))/width;
+    const int y_end = (int)2*(br.y + 2*TILE_RADIUS*sinf(PI/3))/height;
+
+    // render with some buffer to hide loading tiles
+    const int buffer = 2;
+    for (int y = y_start - buffer; y < y_end + buffer; y++) {
+        for (int x = x_start - buffer; x < x_end + buffer; x++) {
+            int offset = y * this->width + x;
+            if (offset < 0 || offset > this->width * this->height) {
+                continue;
+            }
+
+            this->tiles[offset].Draw();
+        }
+    }
 }
 
 unsigned int TileMap::Length() {
