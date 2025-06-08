@@ -20,6 +20,9 @@ typedef struct TileMap {
 
     Image perlin;
 
+    // render region (Vec2i){x: start, y: end}
+    Vec2i render_region_x, render_region_y;
+
     unsigned int Length();
 } TileMap;
 

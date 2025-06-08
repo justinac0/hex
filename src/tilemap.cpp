@@ -33,9 +33,16 @@ void TileMap::LoadFromFile(const char *filepath) {
 }
 
 Tile *TileMap::GetTileFromWorldSpace(float wx, float wy) {
-    for (int i = 0; i < width * height; i++) {
-        if (tiles[i].ContainsPoint({wx, wy})) {
-            return &tiles[i];
+    for (int y = this->render_region_y.x; y < this->render_region_y.y; y++) {
+        for (int x = this->render_region_x.x; x < this->render_region_x.y; x++) {
+            int offset = y * this->width + x;
+            if (offset < 0 || offset > this->width * this->height) {
+                continue;
+            }
+
+            if (tiles[offset].ContainsPoint({wx, wy})) {
+                return &tiles[offset];
+            }
         }
     }
 
@@ -68,10 +75,13 @@ void TileMap::DrawCulled(Camera2D camera, int screen_width, int screen_height) {
 
     // screen bounds to indexes
     const int x_start = (int)2*(tl.x + 2*TILE_RADIUS*cosf(PI/3))/width;
-    const int y_start = (int)2*(tl.y + 2*TILE_RADIUS*sinf(PI/3))/height;
-
     const int x_end = (int)2*(br.x + 2*TILE_RADIUS*cosf(PI/3))/width;
+
+    const int y_start = (int)2*(tl.y + 2*TILE_RADIUS*sinf(PI/3))/height;
     const int y_end = (int)2*(br.y + 2*TILE_RADIUS*sinf(PI/3))/height;
+
+    this->render_region_x = {x_start, x_end};
+    this->render_region_y = {y_start, y_end};
 
     // render with some buffer to hide loading tiles
     const int buffer = 2;
