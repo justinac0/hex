@@ -33,7 +33,7 @@ int main() {
 
     Vector2 camera_offset = {};
 
-    TileMap grid(1024, 720);
+    TileMap grid(128, 128);
     grid.Generate();
 
     Tile *current = NULL;

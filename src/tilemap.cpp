@@ -85,6 +85,19 @@ void TileMap::DrawCulled(Camera2D camera, int screen_width, int screen_height) {
             this->tiles[offset].Draw();
         }
     }
+
+    #ifdef DEBUG
+    for (int y = y_start - buffer; y < y_end + buffer; y++) {
+        for (int x = x_start - buffer; x < x_end + buffer; x++) {
+            int offset = y * this->width + x;
+            if (offset < 0 || offset > this->width * this->height) {
+                continue;
+            }
+
+            this->tiles[offset].DebugDraw();
+        }
+    }
+    #endif
 }
 
 unsigned int TileMap::Length() {
