@@ -2,4 +2,7 @@
 exploration into hexagonal maps for gamedev (WIP).
 
 ## Showcase
-![Perlin](showcase/perlin.png)
+### World Generation
+> Perlin Noise
+![Zoomed out Perlin](showcase/zoomed_out.png)
+![Zoomed in Perlin](showcase/zoomed_in.png)
