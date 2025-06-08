@@ -15,7 +15,13 @@ void DrawCursor() {
     rect.height = 16;
     rect.x = mp.x - rect.width/2;
     rect.y = mp.y - rect.height/2;
-    DrawRectangle(rect.x, rect.y, rect.width, rect.height, RAYWHITE);
+
+    Color primary = RAYWHITE;
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        primary = MAGENTA;
+    }
+
+    DrawRectangle(rect.x, rect.y, rect.width, rect.height, primary);
     DrawRectangleLinesEx(rect, 2, BLACK);
 }
 
